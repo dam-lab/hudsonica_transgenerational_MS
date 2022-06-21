@@ -6,22 +6,22 @@ This is a README file for the repository linked to the manuscript titled “Limi
 I.	Code
 The first directory named “Code” contains all R scripts used to analyze and visualize the data presented in the manuscript. There are six (6) total scripts used, which are outlined below:
 
-1.	A_hudsonica_physical_data.R
+1.	A_hudsonica_physical_data.R - 
 This script analyzes the physico-chemical data collected during the experiment from June 2019-August 2020. The script reads available chronological data (see “Data” section below) of temperature, pH, and pCO2, and other chemical parameters calculated from alkalinity titration experiments. This script evaluates whether physico-chemical data is similar across treatments.
 
-2.	Body_size_analysis_MS_hudsonica.R
+2.	Body_size_analysis_MS_hudsonica.R - 
 This script reads in Body size data and tests for changes in body size across generations for each treatment. This script also calculates Growth rate data based on Development time data.
 
-3.	EPR_complete_MS_hudsonica.R
+3.	EPR_complete_MS_hudsonica.R - 
 This script evaluates egg production rate (EPR) and hatching success (HS) data. It tests for changes in trait values across generations for each treatment and tests for effects of temperature/pH on EPR and HS. It also shows the scripts used to reproduce the figures presented in the manuscript.
 
-4.	Fitness_complete_MS_hudsonica.R
+4.	Fitness_complete_MS_hudsonica.R - 
 This script calculates fitness (λ) data based on available survival, EPR, HS, sex ratio, and development time data. This script tests for changes in λ across generations for each treatment and evaluates the contributions of changing life-history traits to relative fitness. It also has scripts used to reproduce the figures presented in the manuscript.
 
-5.	Reciprocal_transplant_data_MS_hudsonica.R
+5.	Reciprocal_transplant_data_MS_hudsonica.R - 
 This script evaluates all survival, EPR, HS, sex ratio, development time, and λ data for experiments completed during the reciprocal transplant portion of the experiment. It tests for lineage X environment interactions and has scripts used to reproduce the figures in the manuscript.
 
-6.	SurvivalData_complete_MS_hudsonica.R
+6.	SurvivalData_complete_MS_hudsonica.R -
 This script evaluates survival data collected during the experiment. It tests for changes in survival across generations for each treatment and includes scripts for reproducing figures presented in the manuscript.
 
 II.	Data
