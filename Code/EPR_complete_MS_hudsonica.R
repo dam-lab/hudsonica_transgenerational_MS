@@ -1,6 +1,3 @@
-fit.directory <- "C:/Users/james/Documents/Grad_school/OA_hudsonica/Fitness/"
-epr.directory <- "C:/Users/james/Documents/Grad_school/OA_hudsonica/EPR/"
-
 library(ggplot2)
 
 library(data.table)
@@ -14,7 +11,7 @@ library(dplyr)
 #setwd(paste(epr.directory,"Data_frames/", sep = ""))
 
 
-EPRtot <- fread(paste(epr.directory,"Data_frames/EPR_HF_data_total_w_11.txt", sep = ""))
+EPRtot <- fread("EPR_HF_data_total_w_11.txt")
   
 
 
@@ -90,8 +87,8 @@ hfStatsAll$Trait <- "HS"
 
 
 
-fwrite(eprStatsAll, file = paste0(epr.directory,"Ahud_epr_mean.txt"), sep = "\t")
-fwrite(hfStatsAll, file = paste0(epr.directory,"Ahud_hf_mean.txt"), sep = "\t")
+fwrite(eprStatsAll, file = "Ahud_epr_mean.txt")
+fwrite(hfStatsAll, file = "Ahud_hf_mean.txt")
 
 
 #eprStatsAll <- eprStatsAll[-1,]
@@ -588,7 +585,7 @@ hfPlotTotal
 
 
 
-lambda.results <- fread(paste(fit.directory,"lambda_results_devtime_surv_epr_hf_sex_stand_rel.txt", sep = ""))
+lambda.results <- fread("lambda_results_devtime_surv_epr_hf_sex_stand_rel.txt")
 EPRtot.0 <- filter(EPRtot, Generation == 0)
 
 last.gen <- max(lambda.results$Generation.c)
@@ -895,7 +892,7 @@ library(broom)
 library(car)
 library(sjPlot)
 
-EPRtot <- fread(paste0(epr.directory,"Data_frames/EPR_HF_data_total_w_11.txt"))
+EPRtot <- fread("EPR_HF_data_total_w_11.txt")
 
 #create linear models that are tested against each other grouped by generation and analyzes EPR/HF by temp, pH, and temp*pH
 EPRtot <- EPRtot[!is.na(EPRtot),]
@@ -928,7 +925,6 @@ EPRtot <- unite(EPRtot,
                 c(Generation, Treatment),
                 remove = FALSE)
 
-#fwrite(EPRtot, file = "EPR_HF_data_total1.txt")
 
 # remove for where there is no data
 EPRtot <- subset(EPRtot, Gen.treat != "9_HA")
@@ -1132,14 +1128,14 @@ hf.pw.groups.f11$variables <- rownames(hf.pw.groups.f11)
 
 
 
-fwrite(epr.tukey.groups, file = paste(epr.directory,"Statistics/EPR_tukey_groups.txt", sep = ""), sep = "\t")
-fwrite(hf.tukey.groups, file = paste(epr.directory,"Statistics/HF_tukey_groups.txt", sep = ""), sep = "\t")
+fwrite(epr.tukey.groups, file = "Statistics/EPR_tukey_groups.txt")
+fwrite(hf.tukey.groups, file = "Statistics/HF_tukey_groups.txt")
 
-fwrite(epr.pw.groups, file = paste(epr.directory,"Statistics/EPR_pw_groups.txt", sep = ""), sep = "\t")
-fwrite(hf.pw.groups, file = paste(epr.directory,"Statistics/HF_pw_groups.txt", sep = ""), sep = "\t")
+fwrite(epr.pw.groups, file = "Statistics/EPR_pw_groups.txt")
+fwrite(hf.pw.groups, file = "Statistics/HF_pw_groups.txt")
 
-fwrite(epr.pw.groups.f11, file = paste(epr.directory,"Statistics/EPR_pw_groups_F11.txt", sep = ""), sep = "\t")
-fwrite(hf.pw.groups.f11, file = paste(epr.directory,"Statistics/HF_pw_groups_F11.txt", sep = ""), sep = "\t")
+fwrite(epr.pw.groups.f11, file = "Statistics/EPR_pw_groups_F11.txt")
+fwrite(hf.pw.groups.f11, file = "Statistics/HF_pw_groups_F11.txt")
 
 
 # pairwise comparisons with grouping variables
@@ -1176,8 +1172,8 @@ p2
 
 hf.groups <- CLD(emm_HF)
 
-fwrite(epr.groups, file = paste(epr.directory,"Statistics/EPR_groups.txt", sep = ""), sep = "\t")
-fwrite(hf.groups, file = paste(epr.directory,"Statistics/HF_groups.txt", sep = ""), sep = "\t")
+fwrite(epr.groups, file = "Statistics/EPR_groups.txt")
+fwrite(hf.groups, file = "Statistics/HF_groups.txt")
 
 
 
@@ -1192,11 +1188,11 @@ epr.3.way <- aov(EPRtot~Generation.c*Temp*pH, data = EPRtot)
 summary(epr.3.way)
 Three.way.anova.epr <- Anova(epr.3.way)
 Three.way.anova.epr$factors <- rownames(Three.way.anova.epr)
-fwrite(Three.way.anova.epr, file = paste(epr.directory, "Statistics/Three_way_anova_epr.txt", sep = ""), sep = "\t")
+fwrite(Three.way.anova.epr, file = "Three_way_anova_epr.txt")
 
 hf.3.way <- aov(HFtot~Generation*Temp*pH, data = EPRtot)
 summary(hf.3.way)
 Three.way.anova.hf <- Anova(hf.3.way)
 Three.way.anova.hf$factors <- rownames(Three.way.anova.hf)
-fwrite(Three.way.anova.hf, file = paste(epr.directory, "Statistics/Three_way_anova_hf.txt", sep = ""), sep = "\t")
+fwrite(Three.way.anova.hf, file = "Three_way_anova_hf.txt")
 

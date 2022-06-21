@@ -7,10 +7,9 @@ library(ggpubr)
 library(tidyr)
 library(sjPlot)
 library(emmeans)
-bs.dir <- "C:/Users/james/Documents/Grad_school/OA_hudsonica/Body_size_pictures/A.hudsonica/"
-dev.directory <- "C:/Users/james/Documents/Grad_school/OA_hudsonica/Development_time/"
 
-bs.data <- fread(paste0(bs.dir,"Body_size_data_complete.txt"))
+
+bs.data <- fread("Body_size_data_complete.txt")
 bs.data$Generation <- as.numeric(bs.data$Generation)
 
 ## scalars taken from Durbin and Durbin, 1978, Limnology and Oceanography 23(5), 958-969
@@ -47,7 +46,7 @@ bs.data.joined <- inner_join(bs.data.adult, bs.data.cope,
 bs.data.joined$weight.diff <- bs.data.joined$Weight.x - bs.data.joined$Weight.y
 
 
-Dev.time.diff <- fread(paste0(dev.directory,"Dev_time_diff.txt"))
+Dev.time.diff <- fread("Dev_time_diff.txt")
 
 
 bs.data.dev.joined <- inner_join(bs.data.joined, Dev.time.diff,
@@ -57,8 +56,8 @@ bs.data.dev.joined <- inner_join(bs.data.joined, Dev.time.diff,
 
 bs.data.dev.joined$Growth.Rate <- bs.data.dev.joined$weight.diff / bs.data.dev.joined$Dev.diff
 
-fwrite(bs.data.dev.joined, file = paste0(bs.dir,"BS_GR_data_all_w_11.txt"), sep = "\t")
-bs.data.dev.joined <- fread(file = paste0(bs.dir,"BS_GR_data_all_w_11.txt"))
+fwrite(bs.data.dev.joined, file = "BS_GR_data_all_w_11.txt")
+bs.data.dev.joined <- fread("BS_GR_data_all_w_11.txt")
 
 Growth.Rate.sum <- bs.data.dev.joined %>% 
   group_by(Generation, Treatment) %>% 
@@ -139,7 +138,7 @@ bs.data.sum <- bs.data %>%
 bs.data.sum.short <- bs.data.sum %>% 
   filter(Generation < 5)
 
-fwrite(bs.data.sum, file = paste0(bs.dir,"Body_size_data_sum.txt"), sep = "\t")
+fwrite(bs.data.sum, file = "Body_size_data_sum.txt")
 
 bs.plot <- ggplot(data = bs.data.sum.short, aes(x = Generation, color = factor(Treatment), group = factor(Treatment))) +
   
