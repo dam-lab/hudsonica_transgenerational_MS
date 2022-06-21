@@ -225,7 +225,6 @@ ggsave(filename = "Body_size_plot_F11.pdf", path = bs.dir, plot = bs.plot.f11, h
 
 
 ###### Statistics ######
-setwd("C:/Users/james/Documents/Grad_school/OA_hudsonica/Body_size_pictures/A.hudsonica/")
 
 body.size <- fread("Body_size_data_complete.txt")
 

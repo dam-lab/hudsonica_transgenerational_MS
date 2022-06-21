@@ -16,12 +16,7 @@ library(emmeans)
 
 
 
-surv.directory <- "C:/Users/james/Documents/Grad_school/OA_hudsonica/Survival/"
-dev.directory <- "C:/Users/james/Documents/Grad_school/OA_hudsonica/Development_time/"
-fit.directory <- "C:/Users/james/Documents/Grad_school/OA_hudsonica/Fitness/"
-sex.directory <- "C:/Users/james/Documents/Grad_school/OA_hudsonica/Sex_ratio/"
-
-SurvTot <- fread(paste(surv.directory, "SurvDataFiles/Survival_data_total.txt", sep = ""))
+SurvTot <- fread("SurvDataFiles/Survival_data_total.txt")
 
 ##### Creating survival curves for each generation and treatment #####
 

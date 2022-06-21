@@ -8,7 +8,6 @@ library(broom)
 
 library(dplyr)
 
-#setwd(paste(epr.directory,"Data_frames/", sep = ""))
 
 
 EPRtot <- fread("EPR_HF_data_total_w_11.txt")
@@ -45,7 +44,6 @@ eprStatsAll <- EPRtot %>%
          lower.ci = Rate - qt(1 - (0.05 / 2), n.count-1)*se,
          upper.ci = Rate + qt(1 - (0.05 / 2), n.count-1)*se)
 
-#if (wd == "C:/Users/james/Documents/Grad_school/OA_hudsonica/EPR/Data_frames/") {
 new.df <- data.frame(Treatment = c(2,3),
                      Generation = c(11,11),
                      Rate = c(0,0),
@@ -68,7 +66,6 @@ hfStatsAll <- EPRtot %>%
          lower.ci = HF - qt(1 - (0.05 / 2), n.count-1)*se,
          upper.ci = HF + qt(1 - (0.05 / 2), n.count-1)*se)
 
-#if (wd == "C:/Users/james/Documents/Grad_school/OA_hudsonica/EPR/Data_frames/") {
 new.df <- data.frame(Treatment = c(2,3),
                       Generation = c(11,11),
                       HF = c(0,0),
@@ -904,15 +901,6 @@ EPRtot$Generation[EPRtot$Generation==10] <-9
 EPRtot$Generation.c <- as.numeric(EPRtot$Generation)
 EPRtot$Generation <- as.factor(as.numeric(EPRtot$Generation))
 #EPRtot$Treatment <- as.factor(EPRtot$Treatment)
-
-#if (wd == "C:/Users/james/Documents/Grad_school/OA_hudsonica/EPR/Data_frames/") {
-#EPRtot <- EPRtot %>% 
-#  mutate(Rep = case_when(Number < 13 ~ 1,
-#                         Number >=13 & Number < 25 ~ 2,
-#                         Number >= 25 ~ 3)
-#  )
-
-#}
 
 
 EPRtot <- unite(EPRtot,

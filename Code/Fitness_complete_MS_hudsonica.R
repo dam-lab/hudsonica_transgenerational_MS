@@ -1,9 +1,3 @@
-#setwd("C:/Users/james/Documents/Grad_school/OA_Project/Survival/SurvDataFiles/")
-
-surv.directory <- "C:/Users/james/Documents/Grad_school/OA_hudsonica/Survival/"
-fit.directory <- "C:/Users/james/Documents/Grad_school/OA_hudsonica/Fitness/"
-epr.directory <- "C:/Users/james/Documents/Grad_school/OA_hudsonica/EPR/"
-
 library(popbio)
 library(dplyr)
 library(data.table)
@@ -16,18 +10,7 @@ library(emmeans)
 
 
 
-#LF = list.files(pattern = paste(surv.directory,"SurvDataFiles/*.080718.*", sep = ""))
-#LF
-
-#SurvData <- rbindlist(lapply(
-#  setNames(LF,LF), #what you want to be "lapplied"
-#  fread), #what you want the lapply to do
-#  idcol = "source", #what the new column will be named (i.e. the header of the new column)
-#  fill = TRUE) #fills missing columns with NA's
-
-#SurvData <- separate(SurvData, "source", into = c("Date", "x", "Generation"))
-
-SurvData <- fread(paste(surv.directory, "SurvDataFiles/Survival_data_total.txt", sep = ""))
+SurvData <- fread("Survival_data_total.txt")
 # Create uniqe sorting column to group each technical and biological replicate
 
 SurvData <- unite(SurvData,#the data frame
@@ -153,9 +136,8 @@ Survival.list <- lapply(Survival.list, function (x) split(x, f = x$Beak))
 ##### EPR data #####
 
 
-#setwd("C:/Users/james/Documents/Grad_school/OA_Project/EPR/Data_frames/")
 
-EPR.data <- fread(paste(epr.directory,"Data_frames/EPR_HF_data_total.txt", sep = ""))
+EPR.data <- fread("Data_frames/EPR_HF_data_total.txt")
 
 EPR.data$EPRtot[is.na(EPR.data$EPRtot)] = 0
 
@@ -309,9 +291,8 @@ lambda.results <- separate(lambda.results, "Variables", into = c("Generation", "
 # remove the first row as a last step
 lambda.results <- lambda.results[-1,] 
 
-#setwd("C:/Users/james/Documents/Grad_school/OA_Project/Fitness/")
 
-fwrite(lambda.results, file = paste(fit.directory,"lambda_results_devtime_surv_epr.txt", sep = ""), sep = "\t")
+fwrite(lambda.results, file = "lambda_results_devtime_surv_epr.txt")
 
 
 # calculate malthusian parameter
@@ -333,7 +314,7 @@ lambda.results$Malthusian <- log10(lambda.results$lambda)
 
 
 
-lambda.results <- fread(paste(fit.directory,"lambda_results_devtime_surv_epr_hf_sex_w_f11.txt", sep = ""))
+lambda.results <- fread("lambda_results_devtime_surv_epr_hf_sex_w_f11.txt")
 
 lambda.results <- as.data.frame(lambda.results)
 
@@ -375,9 +356,6 @@ lambda.results$Rep.c <- case_when(lambda.results$Treat.Rep == "1_1" ~ 1,
                                   lambda.results$Treat.Rep == "4_2" ~ 11,
                                   lambda.results$Treat.Rep == "4_3" ~ 12)
 
-#fwrite(lambda.results, file = paste(fit.directory,"lambda_results_devtime_surv_epr_hf_sex_devtime_stand_rel_w_f11.txt", sep = ""), sep = "\t")
-#lambda.results <- fread(paste0(fit.directory,"lambda_results_devtime_surv_epr_hf_sex_devtime_stand_rel_w_f11.txt"))
-
 # create continuous generation vector for anova and plotting
 lambda.results$Generation.c <- as.numeric(as.character(lambda.results$Generation)) 
 lambda.results$Generation <- as.factor(as.numeric(lambda.results$Generation))
@@ -399,7 +377,7 @@ m <- Anova(malthusian.model)
 m
 
 m$factors <- rownames(m)
-fwrite(m, file = paste(fit.directory,"Statistics/lambda_devtime_Anova.txt", sep = ""), sep = "\t")
+fwrite(m, file = "lambda_devtime_Anova.txt")
 
 shapiro.test(malthusian.model$residuals)
 
@@ -453,10 +431,10 @@ m5$factors <- rownames(m5)
 
 
 
-fwrite(lambda.results, file = paste(fit.directory,"lambda_results_devtime.txt", sep = ""), sep = "\t")
-fwrite(p2.tukey, file = paste(fit.directory,"Statistics/lambda_devtime_Tukey.txt", sep = ""), sep = "\t")
-fwrite(m5, file = paste(fit.directory,"Statistics/lambda_3way_anova.txt", sep = ""), sep = "\t")
-fwrite(p3, file =paste(fit.directory,"Statistics/lambda_pairwise.txt", sep = ""), sep = "\t")
+fwrite(lambda.results, file = "lambda_results_devtime.txt")
+fwrite(p2.tukey, file = "lambda_devtime_Tukey.txt")
+fwrite(m5, file = "lambda_3way_anova.txt")
+fwrite(p3, file = "lambda_pairwise.txt")
 
 
 
@@ -550,15 +528,6 @@ path.fit <- cfa(mod, data = lambda.results)
 summary(path.fit)
 
 
-library(semPlot)
-
-cisemPaths(path.fit, 'std', layout = "circle", title = T)
-semPaths(path.fit, 'std', layout = 'tree')
-semPaths(path.fit, 'std', layout = 'spring')
-semPaths(path.fit, 'std', layout = 'tree2')
-semPaths(path.fit, 'std', layout = 'circle2')
-
-
 ## split by gen and treatment
 mod2 <- 'lambda.rel ~ surv + epr + hf'
 
@@ -567,56 +536,15 @@ lambda.results <- unite(lambda.results,
                         c(Generation, Treatment),
                         remove = F)
 
-
+# create a list of lambda data frames to create the SEMs
 lambda.list <- split(lambda.results, f = lambda.results$unique)
 path.list <- cfaList(mod2, lambda.list)
+names(lambda.list)
 
-
+# identify the coefficients for each factor within each SEM
 coef(path.list)
 
 
-
-path.list2 <- lapply(lambda.list, function (x) cfa(mod2, x)) ## produces the same results as using SEM
-
-AM.0 <- as.data.frame(summary(path.list2$`0_1`))
-OA.0 <- as.data.frame(summary(path.list2$`0_2`))
-OW.0 <- as.data.frame(summary(path.list2$`0_3`))
-OWA.0 <- as.data.frame(summary(path.list2$`0_4`))
-AM.4 <- as.data.frame(summary(path.list2$`4_1`))
-OA.4 <- as.data.frame(summary(path.list2$`4_2`))
-OW.4 <- as.data.frame(summary(path.list2$`4_3`))
-OWA.4 <- as.data.frame(summary(path.list2$`4_4`))
-AM.11 <- as.data.frame(summary(path.list2$`11_1`))
-OWA.11 <- as.data.frame(summary(path.list2$`11_4`))
-
-fwrite(AM.0, file = paste0(fit.directory,"AM_F0_SEM.txt"), sep = "\t")
-fwrite(OA.0, file = paste0(fit.directory,"OA_F0_SEM.txt"), sep = "\t")
-fwrite(OW.0, file = paste0(fit.directory,"OW_F0_SEM.txt"), sep = "\t")
-fwrite(OWA.0, file = paste0(fit.directory,"OWA_F0_SEM.txt"), sep = "\t")
-
-fwrite(AM.11, file = paste0(fit.directory,"AM_F11_SEM.txt"), sep = "\t")
-fwrite(OA.4, file = paste0(fit.directory,"OA_F4_SEM.txt"), sep = "\t")
-fwrite(OW.4, file = paste0(fit.directory,"OW_F4_SEM.txt"), sep = "\t")
-fwrite(OWA.11, file = paste0(fit.directory,"OWA_F11_SEM.txt"), sep = "\t")
-fwrite(OWA.4, file = paste0(fit.directory,"OWA_F4_SEM.txt"), sep = "\t")
-fwrite(AM.4, file = paste0(fit.directory,"AM_F4_SEM.txt"), sep = "\t")
-
-
-
-path.list3 <- list(path.list2$`0_1`,
-                   path.list2$`0_2`,
-                   path.list2$`0_3`,
-                   path.list2$`0_4`,
-                   path.list2$`11_1`,
-                   path.list2$`4_2`,
-                   path.list2$`4_3`,
-                   path.list2$`11_4`)
-
-
-
-
-
-sem.figs <- lapply(path.list3, function (x) semPaths(x, 'std', layout = 'circle', title = T))
 
 ##### multiple regression coefficients #####
 
@@ -700,10 +628,10 @@ l11.emm2.pw <- tidy(l11.emm2.pw)
 
 
 
-fwrite(l11.emm.Tukey, paste0(fit.directory, "Lambda_Tukey1.txt"), sep = "\t")
-fwrite(l11.emm2.Tukey, paste0(fit.directory, "Lambda_Tukey2.txt"), sep = "\t")
-fwrite(l11.emm.pw, paste0(fit.directory, "Lambda_contrasts1.txt"), sep = "\t")
-fwrite(l11.emm2.pw, paste0(fit.directory, "Lambda_contrasts2.txt"), sep = "\t")
+fwrite(l11.emm.Tukey, "Lambda_Tukey1.txt")
+fwrite(l11.emm2.Tukey, "Lambda_Tukey2.txt")
+fwrite(l11.emm.pw, "Lambda_contrasts1.txt")
+fwrite(l11.emm2.pw, "Lambda_contrasts2.txt")
 
 
 
@@ -717,46 +645,7 @@ Lambda.11.sum <- lambda.results %>%
          upper.ci = mean + qt(1 - (0.05 / 2), n.count-1)*se)
 
 
-fwrite(Lambda.11.sum, paste0(fit.directory,"Lambda_mean_F11.txt"), sep = "\t")
-
-# test if the replicates affect the lambda
-#malthusian.model.4 <- aov(lambda~Generation.c*Treat.Rep, data = lambda.results)
-#m4 <- Anova(malthusian.model.4)
-#m4
-
-
-
-## how to do pairwise comparisons with zero-inflated models
-## help from: https://cran.r-project.org/web/packages/glmmTMB/vignettes/troubleshooting.html
-
-## and https://rcompanion.org/handbook/J_01.html
-
-
-## can't use a poisson model for non-integer data https://github.com/atahk/pscl/issues/5
-#library(pscl)
-#lambda.results$Treatment.c <- as.numeric(lambda.results$Treatment)
-#lambda.results$lambda.i <- as.integer(lambda.results$lambda)
-
-#m.zi <- zeroinfl(lambda ~ Generation.c*Treatment,
-#                 data = lambda.results,
-#                 offset = log(lambda),
-#
-
-#dist = "poisson")
-#summary(m.zi)
-
-## try to do a pairwise comparison with these results
-
-#fit_zigauss.2 <- glmmTMB(lambda~Generation*Treatment + (1|Rep.c),
-#                         data = lambda.results,
-#                         ziformula = ~.)
-
-#emmip(fit_zigauss.2, Treatment ~ Generation)
-
-#emm_2 <- emmeans(fit_zigauss.2, pairwise ~ Generation | Treatment)
-
-#p2 <- pairs(emm_2)
-#p2
+fwrite(Lambda.11.sum, "Lambda_mean_F11.txt")
 
 
 ################################################################################################################################################
@@ -871,9 +760,7 @@ ggsave("lambda_plot.pdf", plot = lambdaPlotTotal.no.f11, path = fit.directory, w
 
 
 
-#setwd("C:/Users/james/Documents/Grad_school/OA_Project/Fitness/")
-fwrite(lambda.mean.c, file = paste(fit.directory,"lambda_mean_devtime.txt", sep = ""), sep = "\t")
-#lambda.results$Malthusian <- log10(lambda.results$lambda)
+fwrite(lambda.mean.c, file = "lambda_mean_devtime.txt")
 
 # plot to see how data is distributed among treatments and reps
 ggplot(data = lambda.results, aes(x = Generation.c,
@@ -928,9 +815,8 @@ ggplot(data = lambda.results.pos, aes(x = Generation.c,
 
 ## plots of traits vs. relative lambda
 
-setwd("C:/Users/james/Documents/Grad_school/OA_Project/Fitness/")
 
-lambda.results.traits <- fread(paste(fit.directory,"lambda_results_devtime_surv_epr.txt", sep = ""))
+lambda.results.traits <- fread("lambda_results_devtime_surv_epr_hf_sex_w_f11.txt")
 
 epr.lambda.plot <- ggplot(data = lambda.results.traits, aes(x = epr,
                                                             y = lambda
@@ -1026,92 +912,3 @@ ggsave(filename = "Lambda_boxplot.pdf", plot = lambdaBoxplot, path = fit.directo
 
 
 
-
-
-
-
-
-################################################################################################################################################
-##### Old analysis methods #####################
-
-
-
-
-
-
-#malthusian.pairwise <- pairwise.t.test(lambda.results$Malthusian, lambda.results$unique)
-
-#malthusian.pairwise
-
-
-#malthusian.pairwise.table <- lambda.results %>%
-#  group_by(Generation, Treatment) %>%
-#  do(tidy(pairwise.t.test(lambda.results$Malthusian, lambda.results$unique)))
-
-#malthusian.pairwise.table.adj <- filter(malthusian.pairwise.table, p.value < 0.05)
-
-
-
-
-# Two-way ANOVA
-malthusian.model <- aov(Malthusian~Generation*Treatment, data=lambda.results)
-
-summary(malthusian.model)
-
-
-malthusian.model.table <- lambda.results %>%
-  group_by(Generation, Treatment) %>%
-  do(tidy(aov(Malthusian~Generation*Treatment, data=lambda.results)))
-
-
-
-## find the r2 values
-Models <- lambda.results %>%
-  group_by(Treatment) %>%
-  do(model = lm(Malthusian~Generation, data=.))
-
-
-model.results <- Models %>% glance(model)
-
-
-
-
-lambda.lists <- split(lambda.results, lambda.results$Treatment) #create different dataframes based on the unique feature
-lambda.lists
-
-
-lambda.model.list <- lapply(lambda.lists,
-                           function(x) lm(Malthusian~as.numeric(Generation), data = x))
-
-
-
-lambda.slope.list <- lapply(lambda.model.list,
-                            function(x) coef(x)["as.numeric(Generation)"])
-
-
-fwrite(lambda.results, file = "Lambda_results_extended_method_dev_time.txt", sep = "\t")
-fwrite(malthusian.pairwise.table, file = "Malthusian_pairwise_table_extended.txt", sep = "\t")
-fwrite(malthusian.pairwise.table.adj, file = "Malthusian_pairwise_table_extended_adj.txt", sep = "\t")
-fwrite(malthusian.model.table, file = "Malthusian_anova_table_extended.txt", sep = "\t")
-
-
-###### Malthusian Point Plot #####
-
-
-
-setwd("C:/Users/james/Documents/Grad_school/OA_Project/Survival/Cost_experiment/")
-lambda.results <- fread("Malthusian_results_all_reps.txt")
-
-
-
-
-
-
-lambda.list.mean <- lambda.results %>%
-  group_by(Treatment, Food) %>%
-  summarise(mean = mean(Malthusian, na.rm = TRUE),
-            sd = sd(Malthusian, na.rm = TRUE),
-            n = n()) %>%
-  mutate(se = sd/sqrt(n),
-         lower.ci = mean - qt(1 - (0.05 / 2), n-1)*se,
-         upper.ci = mean + qt(1 - (0.05 / 2), n-1)*se)

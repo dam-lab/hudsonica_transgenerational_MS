@@ -16,11 +16,10 @@ library(lme4)
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 ####################################################################### Survival Data analysis ##################################################################################
-setwd("C:/Users/james/Documents/Grad_school/OA_hudsonica/Cost_experiments/")
 
 
 # Read in data table
-SurvData <- fread("C:/Users/james/Documents/Grad_school/OA_hudsonica/Cost_experiments/SurvDataTransplant.txt")
+SurvData <- fread("SurvDataTransplant.txt")
 
 
 
@@ -160,8 +159,7 @@ ggsave(filename = "survplot_square.pdf", surv.plot.large, height = 8.5, width = 
 ####################################################################### Egg Production and Hatching #############################################################################
 
 
-cost.dir <- "C:/Users/james/Documents/Grad_school/OA_hudsonica/Cost_experiments/"
-Cost.epr <- fread(paste(cost.dir, "Feeding_cost_epr.txt", sep = ""))
+Cost.epr <- fread("Feeding_cost_epr.txt")
 
 #Cost.epr1 <- filter(Cost.epr, Cost.epr$Food == 600)
 #Cost.epr1 <- filter(Cost.epr1, Cost.epr1$Treatment < 5)
@@ -232,17 +230,17 @@ epr.emm.no.starve2.pw <- tidy(epr.emm.no.starve2.pw)
 
 
 
-fwrite(epr.emm.no.starve, paste0(cost.dir, "EPR_cost_pw.txt"), sep = "\t")
-fwrite(epr.emm.no.starve.T, paste0(cost.dir, "EPR_cost_Tukey.txt"), sep = "\t")
-fwrite(epr.emm.no.starve2.pw, paste0(cost.dir, "EPR_cost_pw2.txt"), sep = "\t")
-fwrite(epr.emm.no.starve2.Tukey, paste0(cost.dir, "EPR_cost_Tukey2.txt"), sep = "\t")
+fwrite(epr.emm.no.starve, "EPR_cost_pw.txt")
+fwrite(epr.emm.no.starve.T, "EPR_cost_Tukey.txt", sep = "\t")
+fwrite(epr.emm.no.starve2.pw, "EPR_cost_pw2.txt", sep = "\t")
+fwrite(epr.emm.no.starve2.Tukey, "EPR_cost_Tukey2.txt", sep = "\t")
 
 
 epr.tukey.groups.no.starve <- CLD(epr.emm.no.starve)
 epr.pw.groups.no.starve <- CLD(epr.emm.no.starve, p.adjust.methods = "none")
 
-fwrite(epr.pw.groups.no.starve, file = paste(cost.dir,"Cost_epr_pw_groups_no_starve.txt", sep = ""), sep = "\t")
-fwrite(epr.tukey.groups.no.starve, file = paste(cost.dir,"Cost_epr_tukey_groups_no_starve.txt", sep = ""), sep = "\t")
+fwrite(epr.pw.groups.no.starve, file = "Cost_epr_pw_groups_no_starve.txt", sep = "\t")
+fwrite(epr.tukey.groups.no.starve, file = "Cost_epr_tukey_groups_no_starve.txt", sep = "\t")
 
 
 ## Line x environment interactions
@@ -291,7 +289,7 @@ Cost.epr.mean <- Cost.epr %>%
          lower.ci = mean - qt(1 - (0.05 / 2), n.count-1)*se,
          upper.ci = mean + qt(1 - (0.05 / 2), n.count-1)*se)
 
-fwrite(Cost.epr.mean, file = paste0(cost.dir,"Cost_epr_mean.txt"), sep = "\t")
+fwrite(Cost.epr.mean, file = "Cost_epr_mean.txt", sep = "\t")
 
 Cost.epr.mean$Line <- case_when(Cost.epr.mean$Treatment == 1 ~ "AM",
                                 Cost.epr.mean$Treatment == 4 ~ "GH",
@@ -420,7 +418,7 @@ Cost.hf.mean <- Cost.epr %>%
          lower.ci = mean - qt(1 - (0.05 / 2), n.count-1)*se,
          upper.ci = mean + qt(1 - (0.05 / 2), n.count-1)*se)
 
-fwrite(Cost.hf.mean, file = paste0(cost.dir,"Cost_hf_mean.txt"), sep = "\t")
+fwrite(Cost.hf.mean, file = "Cost_hf_mean.txt", sep = "\t")
 
 Cost.hf.mean$Line <- case_when(Cost.hf.mean$Treatment == 1 ~ "AM",
                                 Cost.hf.mean$Treatment == 4 ~ "GH",
@@ -653,7 +651,7 @@ Devtimesum <- Dev.time %>%
          lower.ci = mean - qt(1 - (0.05 / 2), n.count-1)*se,
          upper.ci = mean + qt(1 - (0.05 / 2), n.count-1)*se)
 
-fwrite(Devtimesum, file = paste0(cost.dir,"Dev_time_sum_cost.txt"), sep = "\t")
+fwrite(Devtimesum, file = "Dev_time_sum_cost.txt", sep = "\t")
 
 ## Add the dev.time to the survival table
 SurvData1 <- inner_join(SurvData1,
@@ -910,10 +908,10 @@ lambda.emm.Tukey2 <- pairs(lambda.emm2)
 lambda.emm.Tukey2 <- tidy(lambda.emm.Tukey2$emmeans)
 
 
-fwrite(lambda.emm.pairs, paste0(cost.dir, "Lambda_contrasts1.txt"), sep = "\t")
-fwrite(lambda.emm.pairs2, paste0(cost.dir, "Lambda_contrasts2.txt"), sep = "\t")
-fwrite(lambda.emm.Tukey, paste0(cost.dir, "Lambda_Tukey1.txt"), sep = "\t")
-fwrite(lambda.emm.Tukey2, paste0(cost.dir, "Lambda_Tukey2.txt"), sep = "\t")
+fwrite(lambda.emm.pairs, "Lambda_contrasts1.txt")
+fwrite(lambda.emm.pairs2, "Lambda_contrasts2.txt")
+fwrite(lambda.emm.Tukey, "Lambda_Tukey1.txt")
+fwrite(lambda.emm.Tukey2, "Lambda_Tukey2.txt")
 
 
 
@@ -933,7 +931,7 @@ test <- LSD.test(l2,trt = "unique")
 lambda.lsd.groups <- test$groups
 lambda.lsd.groups$unique <- rownames(lambda.lsd.groups)
 
-fwrite(lambda.lsd.groups, file = paste0(cost.dir,"lambda_pairwise_devtime_hudsonica_groups.txt"), sep = "\t")
+fwrite(lambda.lsd.groups, file = "lambda_pairwise_devtime_hudsonica_groups.txt")
 
 
 
