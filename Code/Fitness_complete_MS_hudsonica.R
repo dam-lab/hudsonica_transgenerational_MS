@@ -493,30 +493,45 @@ ranef(fit_zigauss)$zi # the random effects intercepts of the model
 ## create linear mixed effects models that include zeroes and omit zeroes
 library(lme4)
 ## create the predicted values graph
-lambda.results <- lambda.results %>% 
+lambda.results1 <- lambda.results %>%
+  filter(Generation.c <5) %>% 
   mutate(lambda_zero = if_else(lambda==0, 0, 1))
 
 
 
 # model for predicting when lambda is either 0 or >0
 gm1 <- glmer(lambda_zero ~ Generation.c*Treatment+(1|Rep.c),
-             data = lambda.results, family = binomial)
+             data = lambda.results1, family = binomial)
+summary(gm1)
+lambda.pred.prob.plot <- plot_model(gm1,type='int', colors = c("#0c7bdc", #AM
+                                                               "#009e73", #OA
+                                                               "#ffa500", #OW
+                                                               "#d55e00" #OWA
+)) + 
+  theme_sjplot2()
+lambda.pred.prob.plot
 
-lambda.pred.prob.plot <- plot_model(gm1,type='int') + theme_sjplot2()
-
-ggsave(filename = "Ahud_lambda_pred_prob_plot.pdf", plot = lambda.pred.prob.plot, path = fit.directory, width = 16, height = 9, units = "in")
+ggsave(filename = "Ahud_lambda_pred_prob_plot1.pdf", plot = lambda.pred.prob.plot, path = fit.directory, width = 6.5, height = 3.7, units = "in")
 
 # model for predicting when lambda is not 0
-lambda.nonzero = lambda.results[lambda.results$lambda>0,]
+lambda.nonzero = lambda.results1[lambda.results1$lambda>0,]
 
 aa = lmer(lambda~Generation.c*Treatment+(1|Rep.c),
           data=lambda.nonzero)
 
+set_theme(axis.textsize = 16)
+lambda.pred.values.plot <- plot_model(aa,type='int', colors = c("#0c7bdc", #AM
+                                                                "#009e73", #OA
+                                                                "#ffa500", #OW
+                                                                "#d55e00" #OWA
+))+ 
+  theme_sjplot2() 
 
-lambda.pred.values.plot <- plot_model(aa,type='int') + theme_sjplot2()
 
+
+
+lambda.pred.values.plot
 ggsave(filename = "Ahud_lambda_pred_values_plot.pdf", plot = lambda.pred.values.plot, path = fit.directory, width = 16, height = 9, units = "in")
-
 
 ##### PATH analysis #####
 mod <- 'lambda.rel ~ surv + epr + hf + dev.time + sex'
