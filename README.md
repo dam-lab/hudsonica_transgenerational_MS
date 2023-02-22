@@ -184,3 +184,17 @@ f)	hf – the hatching success value used to calculate λ.
 g)	dev.time – the development time (days) to adulthood needed to calculate λ.
 h)	lambda – the calculated fitness (λ) value.
 
+III.	Statistics
+
+A.	Summary files – all files in this directory are MS Excel Workbooks with multiple tabs that consist of model summaries and ANOVA tables. All tabs are labeled with the respective model type for a particular trait. 
+
+1.	BodySize_GrowthRate_stats_MS_updated.xls – this is a spreadsheet with summarized statistics for Body Size and Growth Rate across the transgenerational experiment.
+2.	Dev_time_stats_MS_updated.xls – this is a spreadsheet with summarized statistics for Development time across the transgenerational experiment.
+3.	EPR_HS_stats_MS.xls – this is a spreadsheet with summarized statistics for EPR and HS across the transgenerational experiment.
+4.	EPR_RT_statistics_MS.xls – this is a spreadsheet with summarized statistics for EPR in the reciprocal transplant part of the experiment.
+5.	Lambda_RT_statistics_MS.xls – this is a spreadsheet with summarized statistics for calculated fitness in the reciprocal transplant part of the experiment.
+6.	Lambda_stats_MS_updated.xls – this is a spreadsheet with summarized statistics for calculated fitness across the transgenerational experiment.
+7.	Sexratio_stats_MS_updated.xls – this is a spreadsheet with summarized statistics for sex ratio changes across the transgenerational experiment.
+8.	Survival_stats_MS_updated.xls – this is a spreadsheet with summarized statistics for survival to adulthood across the transgenerational experiment.
+
+
