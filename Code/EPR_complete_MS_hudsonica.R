@@ -1,39 +1,21 @@
 library(ggplot2)
-
 library(data.table)
-
 library(tidyr)
-
 library(broom)
-
 library(dplyr)
-
+library(lme4)
+library(mgcv)
+library(emmeans)
+library(car)
 
 
 EPRtot <- fread("EPR_HF_data_total_w_11.txt")
-  
 
 
+EPRtot <- EPRtot %>% 
+  mutate(unite(., Gen.treat, c(Generation, Treatment), remove = F),
+         unite(., Treat.Rep, c(Treatment, Rep), remove = F))
 
-#remove the last row because it adds an extra row in the summary of NaNs
-#last.row <- nrow(EPRtot)
-#EPRtot <- EPRtot[-last.row,]
-
-
-if (EPRtot$pH == 8.13) {
-
-  EPRtot$pH[EPRtot$pH == '8.13'] <- 8.20
-
-  }
-
-EPRtot <- unite(EPRtot,
-                Gen.treat,
-                c(Generation, Treatment),
-                remove = FALSE)
-
-
-
-# remove for where there is no data
 
 eprStatsAll <- EPRtot %>% 
   group_by(Treatment, Generation) %>% 

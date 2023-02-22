@@ -388,7 +388,8 @@ ggsave(filename = "surv_boxplot_F11.pdf", plot = survBoxplot, path = surv.direct
 ##### Statistics for Survival #####
 
 ## model for pairwise tukey comparisons
-
+SurvTot.agg <- SurvTot.agg.F11 %>% 
+  filter(Generation.c <11)
 SurvTot.lm <- lmer(lx~Generation.c*Treatment+(1|Treat.Rep), 
                     REML = FALSE,
                     #family = gaussian,
@@ -406,11 +407,13 @@ SurvTot.lm2 <- lmer(lx~factor(Generation)*factor(Treatment)+(1|Treat.Rep),
 
 surv.emm <- emmeans(SurvTot.lm2, pairwise ~ Generation | Treatment)
 
-pairs(surv.emm, adjust = "none")
+pairs(surv.emm, which=1, adjust = "none")
 
 surv.emm2 <- emmeans(SurvTot.lm2, pairwise ~ Treatment | Generation)
 
-pairs(surv.emm2)
+pairs(surv.emm2, which = 1) # Tukey results
+pairs(surv.emm2, which = 1, adjust = "none") # normal t-test comparisons
+pairs(surv.emm2, which = 1, adjust = "bonf") # bonferonni corrections
 
 
 Surv.pairwise <- tidy(pairwise.t.test(SurvTot.agg$lx, SurvTot.agg$Generation:SurvTot.agg$Treatment, p.adjust.method = "none"))

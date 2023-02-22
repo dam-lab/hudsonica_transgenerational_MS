@@ -9,7 +9,6 @@ library(car)
 library(emmeans)
 
 
-
 SurvData <- fread("Survival_data_total.txt")
 # Create uniqe sorting column to group each technical and biological replicate
 
@@ -312,7 +311,7 @@ lambda.results$Malthusian <- log10(lambda.results$lambda)
 
 
 
-
+setwd("C:/Users/james/Documents/Grad_school/OA_hudsonica/Fitness/")
 
 lambda.results <- fread("lambda_results_devtime_surv_epr_hf_sex_w_f11.txt")
 
@@ -410,7 +409,6 @@ p2.tukey <- tidy(p2)
 p3 <- tidy(pairwise.t.test(lambda.results$lambda, lambda.results$Generation:lambda.results$Treatment, p.adjust.method = "none"))
 
 
-
 lambda.results$Temp <- case_when(lambda.results$Treatment == "1" ~ 13,
                                  lambda.results$Treatment == "2" ~ 13,
                                  lambda.results$Treatment == "3" ~ 15,
@@ -439,8 +437,57 @@ fwrite(p3, file = "lambda_pairwise.txt")
 
 
 
+
+## two-part mixed effects model
+
+## use to identify how inflated the zeroes make the data
+
+library(glmmTMB)
+
+fit_zigauss <- glmmTMB(lambda~Generation.c*Treatment+(1|Rep.c),
+                       data = lambda.results,
+                       ziformula = ~Generation.c*Treatment+(1|Rep.c)) # this specifies the zero-inflated part of the model
+
+## fixed effects results correspond to when response is >0, and zero-inflation results correspond to when lambda includes 0
+fit_zigauss
+
+summary(fit_zigauss)
+
+
+## create a formatted output of model results with intra-class correlation (ICC)
+tab_model(fit_zigauss)
+
+
+fixef(fit_zigauss)$zi # the fixed-effects results of the zero-inflated model
+ranef(fit_zigauss)$zi # the random effects intercepts of the model
+
+
+## three-way ANOVA
+fit_zigauss.2 <- glmmTMB(lambda ~ factor(Generation.c) * factor(Temp) * factor(pH) + (1|Treat.Rep),
+                         data = subset(lambda.results, Generation.c < 5),
+                         ziformula = ~.)
+
+summary(fit_zigauss.2)
+lambda.anova <- as.data.frame(Anova(fit_zigauss.2))
+lambda.anova$Factors <- rownames(lambda.anova)
+fwrite(lambda.anova, file = paste0(fit.directory,"Statistics/Lambda_3way_anova.txt"), sep = "\t")
+
+## add F11
+lambda.results.F11 <- lambda.results %>% 
+  filter(Treatment == 1 | Treatment == 4)
+
+fit_zigauss.3 <- glmmTMB(lambda ~ Generation.c * factor(Treatment) + (1|Treat.Rep),
+                         data = lambda.results.F11,
+                         ziformula = ~.)
+summary(fit_zigauss.3)
+lambda.anova.2 <- as.data.frame(Anova(fit_zigauss.3))
+lambda.anova.2$Factors <- rownames(lambda.anova.2)
+fwrite(lambda.anova.2, file = paste0(fit.directory,"Statistics/Lambda_anova_F11.txt"), sep = "\t")
+
+### Gam models
+
 library(mgcv) # s() indicates a smooth function
-gam1 <- gam(lambda ~ s(Generation.c, by = Treatment, k = 3), data = lambda.results)
+gam1 <- gam(lambda ~ s(Generation.c, by = Treatment, k = 3), data = subset(lambda.results, Generation.c < 5))
 summary(gam1)
 #gam2 <- gam(lambda ~ s(Generation.c, by = Treatment, k = 4), data = lambda.results)
 #gam3 <- gam(lambda ~ s(Generation.c, by = Treatment, k = 5), data = lambda.results)
@@ -466,29 +513,8 @@ gam.stats
 tab_model(gam1)
 
 
-## two-part mixed effects model
-
-## use to identify how inflated the zeroes make the data
-
-library(glmmTMB)
-
-fit_zigauss <- glmmTMB(lambda~Generation.c*Treatment+(1|Rep.c),
-                       data = lambda.results,
-                       ziformula = ~Generation.c*Treatment+(1|Rep.c)) # this specifies the zero-inflated part of the model
-
-## fixed effects results correspond to when response is >0, and zero-inflation results correspond to when lambda includes 0
-fit_zigauss
-
-summary(fit_zigauss)
-
-
-## create a formatted output of model results with intra-class correlation (ICC)
-tab_model(fit_zigauss)
-
-
-fixef(fit_zigauss)$zi # the fixed-effects results of the zero-inflated model
-ranef(fit_zigauss)$zi # the random effects intercepts of the model
-
+gam2 <- gam(lambda ~ s(Generation.c, by = Treatment, k = 3), data = lambda.results.F11)
+summary(gam2)
 
 ## create linear mixed effects models that include zeroes and omit zeroes
 library(lme4)
