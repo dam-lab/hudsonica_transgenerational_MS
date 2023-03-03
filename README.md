@@ -195,6 +195,7 @@ A.	Summary files – all files in this directory are MS Excel Workbooks with mul
 5.	Lambda_RT_statistics_MS.xls – this is a spreadsheet with summarized statistics for calculated fitness in the reciprocal transplant part of the experiment.
 6.	Lambda_stats_MS_updated.xls – this is a spreadsheet with summarized statistics for calculated fitness across the transgenerational experiment.
 7.	Sexratio_stats_MS_updated.xls – this is a spreadsheet with summarized statistics for sex ratio changes across the transgenerational experiment.
-8.	Survival_stats_MS_updated.xls – this is a spreadsheet with summarized statistics for survival to adulthood across the transgenerational experiment.
+8.  Surv_RT_statistics_MS.xls - this is a spreadsheet with summarized statistics for survival in the reciprocal transplant part of the experiment.
+9.	Survival_stats_MS_updated.xls – this is a spreadsheet with summarized statistics for survival to adulthood across the transgenerational experiment.
 
 

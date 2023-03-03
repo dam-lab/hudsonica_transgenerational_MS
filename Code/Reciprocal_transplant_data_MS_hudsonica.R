@@ -115,6 +115,17 @@ surv_pvalue(surv_object_fit, SurvData.kaplan.no.starve)
 # Two-way ANOVA comparing day-specific survivorship by Food abundance and Line
 surv.anova <- aov(lx~Food*line, data = SurvData.kaplan.no.starve)
 summary(surv.anova)
+Anova(surv.anova)
+
+surv.anova2 <- aov(lx~line*Treatment2, data = SurvData.kaplan.no.starve)
+summary(surv.anova2)
+Anova(surv.anova2)
+
+surv.anova3 <- aov(lx~line*Treatment2, data = subset(SurvData.kaplan.no.starve, Food == 250))
+Anova(surv.anova3)
+
+surv.anova4 <- aov(lx~line*Treatment2, data = subset(SurvData.kaplan.no.starve, Food == 600))
+Anova(surv.anova4)
 
 
 
