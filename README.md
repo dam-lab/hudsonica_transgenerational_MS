@@ -225,3 +225,6 @@ A.	Summary files – all files in this directory are MS Excel Workbooks with mul
 9.	Survival_stats_MS_updated.xls – this is a spreadsheet with summarized statistics for survival to adulthood across the transgenerational experiment.
 
 
+IV.	LFS
+A.	This directory represents large files that exceed file upload limits for GitHub and are stored using Git LFS (Large File Storage).
+1.	filtered_variants_Ahudsonica_MS.txt – this is a large, 300 Megabyte tab-delimited text file for evaluating Fst values. There are 48 columns. Details on column information can be found at https://varscan.sourceforge.net/using-varscan.html. To download the file, navigate to: https://github.com/dam-lab/hudsonica_transgenerational_MS/blob/master/Data/filtered_variants_Ahudsonica_MS.txt. 
