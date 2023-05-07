@@ -24,6 +24,13 @@ This script evaluates all survival, EPR, HS, sex ratio, development time, and λ
 6.	SurvivalData_complete_MS_hudsonica.R -
 This script evaluates survival data collected during the experiment. It tests for changes in survival across generations for each treatment and includes scripts for reproducing figures presented in the manuscript.
 
+7.	fst_for_Ahudsonica_MS.R
+This script calculates Fst values for each lineage at each generation relative to the AM lineage for the same generation. Uses the “filtered_variants_Ahudsonica_MS.txt” file and the variants sync file output by “to_sync_Ahudsonica_MS.py”. Produces the “fst_Ahudsonica_MS.txt” file for later visualization.
+
+8.	to_sync_Ahudsonica_MS.py
+This script converts the filtered_variants_Ahudsonica_MS.txt file to sync format. 
+
+
 II.	Data
 The second directory named “Data” contains all data files needed to be analyzed including some output files generated from the scripts. There are a total of eleven (11) files. For clarity, files needed for analysis will be described first. Output data files will be described after.
 
@@ -121,6 +128,8 @@ d)	Stage – the life stage that the individual was collected and measured at (C
 e)	Number – the individual within a replicate for each treatment.
 f)	Length – the measured length (mm).
 
+9.	filtered_variants_Ahudsonica_MS.txt – this is a tab-delimited text file for evaluating Fst values. There are 48 columns. Details on column information can be found at https://varscan.sourceforge.net/using-varscan.html. 
+
 B.	Output Data files
 
 1.	EPR_HF_data_total_w_11.txt – this file is a tab-delimited text file of data used to calculate egg production rate (EPR) and hatching success (HS) for all generations of the original four treatments (AM, OA, OW, and OWA). It is summarized from the EPR_HS_data_total_raw.txt and Feeding_cost_epr.txt files. There are nine (9) columns of data:
@@ -183,6 +192,23 @@ e)	epr – the EPR value (eggs per female per day) used to calculate λ.
 f)	hf – the hatching success value used to calculate λ.
 g)	dev.time – the development time (days) to adulthood needed to calculate λ.
 h)	lambda – the calculated fitness (λ) value.
+
+6.	fst_Ahudsonica_MS.txt – this is a tab-delimited file of Fst values calculated from variant sites. There are 14 columns of data:
+a)	Samp1 – the first sample being compared.
+b)	Treatment_1 – the treatment of the first sample being compared.
+c)	Generation_1 – the generation of the first sample being compared.
+d)	Rep_1 – the replicate of the first sample being compared.
+e)	Samp2 – the second sample being compared.
+f)	Treatment_2 – the treatment of the second sample being compared.
+g)	Generation_2 – the generation of the second sample being compared.
+h)	Rep_2 – the replicate of the second sample being compared.
+i)	fst – the calculated Fst value.
+j)	trt_gen1 – the treatment and generation combined for the first sample being combined.
+k)	trt_gen2 – the treatment and generation combined for the second sample being combined.
+l)	group – the two treatments being compared.
+m)	group_gen – the two treatments being compared with the relevant generation.
+n)	generation_mod – the generation for the two treatments being compared.
+
 
 III.	Statistics
 
