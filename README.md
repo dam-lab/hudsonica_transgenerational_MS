@@ -30,6 +30,9 @@ This script calculates Fst values for each lineage at each generation relative t
 8.	to_sync_Ahudsonica_MS.py
 This script converts the filtered_variants_Ahudsonica_MS.txt file to sync format. 
 
+9.	hudsonica_notes_transcriptomeGenomics_MS.md
+This script trims the raw fastq files, makes supertranscripts, maps, calls and filters SNPs, and creates PCA plots.
+
 
 II.	Data
 The second directory named “Data” contains all data files needed to be analyzed including some output files generated from the scripts. There are a total of eleven (11) files. For clarity, files needed for analysis will be described first. Output data files will be described after.
